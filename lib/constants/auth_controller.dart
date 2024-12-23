@@ -14,6 +14,17 @@ final authControllerProvider =
   );
 });
 
+final currentUserDetailsProvider = FutureProvider((ref) async {
+  final currentUserId = ref.watch(currentUserAccountProvider).value!.$id;
+  final userDetails = ref.watch(userDetailsProvider(currentUserId));
+  return userDetails.value;
+});
+
+final userDetailsProvider = FutureProvider.family((ref, String uid) async {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.getUserData(uid);
+});
+
 final currentUserAccountProvider = FutureProvider((ref) async {
   final authController = ref.watch(authControllerProvider.notifier);
   return authController.currentUser();
@@ -30,37 +41,37 @@ class AuthController extends StateNotifier<bool> {
   Future<model.Account?> currentUser() => _authAPI.currentUserAccount();
 
   void signUp({
-  required String email,
-  required String password,
-  required BuildContext context,
-}) async {
-  state = true;
-  final res = await _authAPI.signUp(email: email, password: password);
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
+    state = true;
+    final res = await _authAPI.signUp(email: email, password: password);
 
-  res.fold((failure) {
-    print('Sign up failed: ${failure.message}');
-    showSnackBar(context, failure.message);
-  }, (user) async {
-    // User created successfully
-    UserModel userModel = UserModel(
-      email: email,
-      name: getNameFromEmail(email),
-      uid: user.$id,
-      orders: [],
-      cart: [],
-    );
-
-    final res2 = await _userAPI.saveUserData(userModel);
-    res2.fold((failure) {
+    res.fold((failure) {
+      print('Sign up failed: ${failure.message}');
       showSnackBar(context, failure.message);
-    }, (r) {
-      showSnackBar(context, 'Account Created Successfully!');
-      // login(email: email, password: password, context: context);
-    });
-  });
+    }, (user) async {
+      // User created successfully
+      UserModel userModel = UserModel(
+        email: email,
+        name: getNameFromEmail(email),
+        uid: user.$id,
+        orders: [],
+        cart: [],
+      );
 
-  state = false;
-}
+      final res2 = await _userAPI.saveUserData(userModel);
+      res2.fold((failure) {
+        showSnackBar(context, failure.message);
+      }, (r) {
+        showSnackBar(context, 'Account Created Successfully!');
+        // login(email: email, password: password, context: context);
+      });
+    });
+
+    state = false;
+  }
 
   void login({
     required String email,
@@ -73,5 +84,25 @@ class AuthController extends StateNotifier<bool> {
     res.fold(((l) {
       showSnackBar(context, l.message);
     }), (r) => Navigator.pushNamed(context, '/home'));
+  }
+
+  Future<UserModel> getUserData(String uid) async {
+    final document = await _userAPI.getUserData(uid);
+    final updatedUser = UserModel.fromMap(document.data);
+    return updatedUser;
+  }
+
+  void logout(BuildContext context) async {
+    state = true;
+    final res = await _authAPI.logout();
+    state = false;
+    res.fold(
+      (l) => showSnackBar(context, l.message),
+      (r) => Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/landing',
+        (route) => false,
+      ),
+    );
   }
 }

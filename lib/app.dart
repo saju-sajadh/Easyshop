@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'constants/auth_controller.dart';
+import 'screens/product_screen.dart';
+import 'screens/profile_screen.dart';
+import 'screens/settings_screen.dart';
 import 'screens/signin_screen.dart';
 import 'screens/signup_screen.dart';
+import 'screens/view.dart';
 import 'widget/bottom_navbar.dart';
 import './screens/landing_screen.dart';
 import 'widget/error_page.dart';
@@ -37,9 +41,14 @@ class MainApp extends ConsumerWidget {
           loading: () => const LoadingPage()),
       debugShowCheckedModeBanner: false,
       routes: {
+        '/landing': (context) => LandingScreen(),
         '/home': (context) => BottomNavBar(),
         '/signup': (context) => SignupScreen(),
         '/signin': (context) => LoginScreen(),
+        '/profile': (context) => ProfileScreen(),
+        '/settings': (context) => SettingsScreen(),
+        '/viewall': (context) => ViewAllScreen(),
+        '/product': (context) => ProductDetailsScreen(),
       },
     );
   }

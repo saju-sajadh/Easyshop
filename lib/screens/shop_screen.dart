@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import '../classifier/classifier.dart';
 import '../styles.dart';
 import '../widget/plant_photo_view.dart';
+import '../widget/top_navbar.dart';
 
 const _labelsFileName = 'assets/labels.txt';
 const _modelFileName = 'model_unquant.tflite';
@@ -56,7 +57,9 @@ class _ShopScreenState extends State<ShopScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Scaffold(
+      appBar: const MyAppBar(),
+      body: Container(
       color: Colors.white,
       width: double.infinity,
       child: Column(
@@ -83,6 +86,7 @@ class _ShopScreenState extends State<ShopScreen> {
           const Spacer(),
         ],
       ),
+    ),
     );
   }
 

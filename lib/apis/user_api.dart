@@ -1,3 +1,4 @@
+import 'package:appwrite/models.dart' as model;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import '../constants/appwrite.dart';
@@ -12,18 +13,18 @@ final userAPIProvider = Provider((ref) {
 
 abstract class IUserAPI {
   FutureEitherVoid saveUserData(UserModel userModel);
+  Future<model.Document> getUserData(String uid);
 }
 
 class UserAPI implements IUserAPI {
   final Databases _db;
   UserAPI({required Databases db}) : _db = db;
 
-
   @override
   FutureEitherVoid saveUserData(UserModel userModel) async {
     try {
       await _db.createDocument(
-        databaseId: AppWrite.databaseId,
+          databaseId: AppWrite.databaseId,
           collectionId: AppWrite.userCollection,
           documentId: userModel.uid,
           data: userModel.toMap());
@@ -34,5 +35,14 @@ class UserAPI implements IUserAPI {
     } catch (e, st) {
       return left(Failure(e.toString(), st));
     }
+  }
+
+  @override
+  Future<model.Document> getUserData(String uid) async {
+    return await _db.getDocument(
+      databaseId: AppWrite.databaseId,
+      collectionId: AppWrite.userCollection,
+      documentId: uid,
+    );
   }
 }
