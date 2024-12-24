@@ -1,9 +1,15 @@
 final List<Map<String, String>> Categories = [
   {
-    'name': 'Fruits & Vegetables',
+    'name': 'Fruits',
     'image': 'assets/images/fruits.png',
     'description':
-        '''Discover a wide variety of fresh, seasonal fruits and vegetables, bursting with flavor and nutrients. From crisp apples to vibrant leafy greens, we have everything you need to maintain a healthy and balanced diet.'''
+        '''Discover a wide variety of fresh, seasonal fruits , bursting with flavor and nutrients. From crisp apples, we have everything you need to maintain a healthy and balanced diet.'''
+  },
+  {
+    'name': 'Vegitables',
+    'image': 'assets/images/veg.jpg',
+    'description':
+        '''Discover a wide variety of fresh, seasonal Vegitables , bursting with flavor and nutrients. From vibrant leafy greens, we have everything you need to maintain a healthy and balanced diet.'''
   },
   {
     'name': 'Meat & Seafood',
@@ -175,7 +181,7 @@ final List<Map<String, String>> fruitCategories = [
   },
   {
     'name': 'Papaya',
-    'image': 'assets/images/Ginger_Iconic.jpg',
+    'image': 'assets/images/Papaya_Iconic.jpg',
     'description':
         '''Papayas are a tropical fruit with a sweet and musky flavor. They are rich in vitamins A and C, as well as fiber and antioxidants. Enjoy them fresh, add them to your smoothies, or use them to make salsas and chutneys.'''
   },

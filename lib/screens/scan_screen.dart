@@ -9,22 +9,29 @@ class ScanShop extends StatefulWidget {
 }
 
 class _ScanScreenState extends State<ScanShop> {
-  String _scanBarcode = 'Unknown';
+  String _scanBarcode = '😀';
 
   Future<void> scanBarcode() async {
     String barcodeScanRes;
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-        '#ff0000', 'Cancel', true, ScanMode.BARCODE
-        );
+          '#ff0000', 'Cancel', true, ScanMode.BARCODE);
     } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
+      barcodeScanRes = '😢';
+      print('Failed to get platform version.');
+    } catch (e) {
+      barcodeScanRes = '😢';
+      print('Failed to get result.');
     }
 
     if (!mounted) return;
 
     setState(() {
-      _scanBarcode = barcodeScanRes;
+      if(barcodeScanRes == '-1'){
+        _scanBarcode = '😢';
+      }else{
+        _scanBarcode = barcodeScanRes;
+      }   
     });
   }
 
@@ -32,16 +39,77 @@ class _ScanScreenState extends State<ScanShop> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MyAppBar(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Scan Result: $_scanBarcode\n'),
-            ElevatedButton(
-              onPressed: () => scanBarcode(),
-              child: const Text('Scan product code'),
-            )
-          ],
+      body: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    const Text(
+                      'Scan Result',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      _scanBarcode,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () => scanBarcode(),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 15,
+                  ),
+                  backgroundColor: Color(0xFFFF7643),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  elevation: 5,
+                  shadowColor: Colors.black54,
+                ),
+                child: const Text(
+                  'Scan Product Code',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

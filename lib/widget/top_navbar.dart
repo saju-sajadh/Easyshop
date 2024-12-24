@@ -19,6 +19,7 @@ class _MyAppBarState extends ConsumerState<MyAppBar> {
     return AppBar(  
       automaticallyImplyLeading: hasDrawer,
       title: const Text('Easyshop'),
+      backgroundColor: Color(0xFFFF7643),
       actions: [
         PopupMenuButton<String>(
           onSelected: (String item) {

@@ -8,7 +8,7 @@ class Sidebar extends StatelessWidget {
         children: [
           const DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Color(0xFFFF7643),
             ),
             child: Text(
               'Menu',
@@ -18,12 +18,17 @@ class Sidebar extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.home),
             title: const Text('Home'),
-            onTap: () => Navigator.pop(context),
+            onTap: () => Navigator.pushNamed(context, '/home'),
           ),
-          ListTile(
-            leading: const Icon(Icons.shopping_cart),
-            title: const Text('Cart'),
-            onTap: () => Navigator.pop(context),
+          ListTile( // Added Profile ListTile
+            leading: const Icon(Icons.person),
+            title: const Text('Profile'),
+            onTap: () => Navigator.pushNamed(context, '/profile'),
+          ),
+          ListTile( // Added Settings ListTile
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
+            onTap: () => Navigator.pushNamed(context, '/settings'),
           ),
         ],
       ),

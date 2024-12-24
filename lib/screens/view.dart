@@ -22,10 +22,13 @@ class ViewAllScreen extends StatelessWidget {
         .firstWhere((entry) => args.startsWith(entry.key),
             orElse: () => MapEntry('', []))
         .value;
+    
+    print(args);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(args.toUpperCase()),
+        backgroundColor: Color(0xFFFF7643),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -45,11 +48,54 @@ class ViewAllScreen extends StatelessWidget {
                   return GestureDetector( // Add GestureDetector
                     onTap: () {
                       // Navigate to the product details screen
-                      Navigator.pushNamed(
+                     if(args != 'Categories'){
+                       Navigator.pushNamed(
                         context,
                         '/product', // Replace with your route name
-                        arguments: item, // Pass the product data
+                        arguments: {
+                          'item': item,
+                          'category': args,
+                        }, // Pass the product data
                       );
+                     }else{
+                      if(item['name'] == 'Fruits'){
+                        Navigator.pushNamed(
+                        context,
+                        '/viewall',
+                        arguments: 'fruit Categories'
+                      );
+                      }else if(item['name'] == 'Vegitables'){
+                        Navigator.pushNamed(
+                        context,
+                        '/viewall',
+                        arguments: 'fruit Categories'
+                      );
+                      }else if(item['name'] == 'Fruits & Vegitables'){
+                        Navigator.pushNamed(
+                        context,
+                        '/viewall',
+                        arguments: 'fruit Categories'
+                      );
+                      }else if(item['name'] == 'Fruits & Vegitables'){
+                        Navigator.pushNamed(
+                        context,
+                        '/viewall',
+                        arguments: 'fruit Categories'
+                      );
+                      }else if(item['name'] == 'Fruits & Vegitables'){
+                        Navigator.pushNamed(
+                        context,
+                        '/viewall',
+                        arguments: 'fruit Categories'
+                      );
+                      }else if(item['name'] == 'Fruits & Vegitables'){
+                        Navigator.pushNamed(
+                        context,
+                        '/viewall',
+                        arguments: 'fruit Categories'
+                      );
+                      }
+                     }
                     },
                     child: Container(
                       decoration: BoxDecoration(

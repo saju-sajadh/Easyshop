@@ -48,7 +48,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             label: 'Cart',
           ),
         ],
-        selectedItemColor: Colors.blue, // Set the color for selected items
+        selectedItemColor: Color(0xFFFF7643), 
         unselectedItemColor: Colors.grey, // Set the color for unselected items
       ),
     );

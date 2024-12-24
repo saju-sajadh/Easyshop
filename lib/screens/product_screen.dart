@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../constants/data_store.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   const ProductDetailsScreen({super.key});
@@ -8,18 +9,32 @@ class ProductDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-    final String name = args['name'] ?? '';
-    final String image = args['image'] ?? '';
-    final String description = args['description'] ?? '';
-    print(description);
-    print(name);
+    final Map<String, dynamic> item = args['item'];
+    final String name = item['name'] ?? '';
+    final String image = item['image'] ?? '';
+    final String description = item['description'] ?? '';
+    final String category = args['category'];
+
+    List<Map<String, String>> similarItems = [];
+    if (category == 'juice Categories') {
+      similarItems = juiceCategories;
+    } else if (category == 'fruit Categories') {
+      similarItems =
+          fruitCategories; 
+    }else if (category == 'vegetable Categories') {
+      similarItems =
+          vegetableCategories; 
+    } else{
+      similarItems = milkCategories;
+    } // Add more else if blocks for other categories
+
 
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xFFF5F6F9),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color(0xFFFF7643),
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -45,8 +60,8 @@ class ProductDetailsScreen extends StatelessWidget {
             children: [
               Container(
                 margin: const EdgeInsets.only(right: 20),
-                padding: 
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(14),
@@ -82,6 +97,9 @@ class ProductDetailsScreen extends StatelessWidget {
                   description: description,
                   pressOnSeeMore: () {},
                 ),
+                const SizedBox(
+                    height: 20), // Add spacing before similar products
+                 SimilarProducts(similarItems: similarItems), 
               ],
             ),
           ),
@@ -190,7 +208,7 @@ class _ProductDescriptionState extends State<_ProductDescription> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            'name',
+            widget.name,
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
@@ -221,7 +239,7 @@ class _ProductDescriptionState extends State<_ProductDescription> {
             showFullDescription // Show full or truncated description
                 ? widget.description
                 : widget.description.length > 20
-                    ? '${widget.description.substring(0, 20)}...'
+                    ? '${widget.description.substring(0, 100)}...'
                     : widget.description,
             maxLines: showFullDescription ? null : 3,
           ),
@@ -255,6 +273,87 @@ class _ProductDescriptionState extends State<_ProductDescription> {
             ),
           ),
         )
+      ],
+    );
+  }
+}
+
+class SimilarProducts extends StatelessWidget {
+  const SimilarProducts({
+    Key? key,
+    required this.similarItems,
+  }) : super(key: key);
+
+  final List<Map<String, String>> similarItems;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Similar Products',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/home');
+                }, // Handle "View All" button press
+                child: const Text(
+                  'View All',
+                  style: TextStyle(
+                    color: Color(0xFFFF7643),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(
+              similarItems.length,
+              (index) {
+                return Container(
+                  margin: EdgeInsets.only(
+                      left: index == 0 ? 20 : 10,
+                      right: index == similarItems.length - 1 ? 20 : 0),
+                  width: 120,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AspectRatio(
+                        aspectRatio: 1,
+                        child: Image.asset(similarItems[index]['image']!),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        similarItems[index]['name']!,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,  
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+        const SizedBox(height: 20), // Add spacing after similar products
       ],
     );
   }

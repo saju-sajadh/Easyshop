@@ -17,6 +17,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Settings'),
+          backgroundColor: Color(0xFFFF7643),
         ),
         body: Center(
           child: SizedBox( // Changed Container to SizedBox

@@ -60,33 +60,29 @@ class _ShopScreenState extends State<ShopScreen> {
     return Scaffold(
       appBar: const MyAppBar(),
       body: Container(
-      color: Colors.white,
-      width: double.infinity,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(top: 30),
-            child: _buildTitle(),
-          ),
-          const SizedBox(height: 20),
-          _buildPhotolView(),
-          const SizedBox(height: 10),
-          _buildResultView(),
-          const Spacer(flex: 5),
-          _buildPickPhotoButton(
-            title: 'Take a photo',
-            source: ImageSource.camera,
-          ),
-          _buildPickPhotoButton(
-            title: 'Pick from gallery',
-            source: ImageSource.gallery,
-          ),
-          const Spacer(),
-        ],
+        color: Colors.white,
+        width: double.infinity,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(top: 30),
+              child: _buildTitle(),
+            ),
+            const SizedBox(height: 20),
+            _buildPhotolView(),
+            const SizedBox(height: 10),
+            _buildResultView(),
+            const Spacer(flex: 5),
+            _buildPickPhotoButton(
+              title: 'Take a photo',
+              source: ImageSource.camera,
+            ), 
+            const Spacer(),
+          ],
+        ),
       ),
-    ),
     );
   }
 
@@ -126,13 +122,13 @@ class _ShopScreenState extends State<ShopScreen> {
         height: 50,
         color: kColorBrown,
         child: Center(
-            child: Text(title,
-                style: const TextStyle(
-                  fontFamily: kButtonFont,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w600,
-                  color: kColorLightYellow,
-                ))),
+          child: Text(title,
+              style: const TextStyle(
+                fontFamily: kButtonFont,
+                fontSize: 20.0,
+                fontWeight: FontWeight.w600,
+                color: kColorLightYellow,
+              ))),
       ),
     );
   }
