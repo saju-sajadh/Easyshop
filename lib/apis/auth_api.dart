@@ -1,101 +1,153 @@
-import 'package:appwrite/appwrite.dart';
-import 'package:appwrite/models.dart' as model;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fpdart/fpdart.dart';
-import '../constants/providers.dart';
-import '../constants/type_dart.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
+import '../model_schema/user_model.dart';
 
-final authAPIProvider = Provider((ref) {
-  final account = ref.watch(appwriteAccountProvider);
-  return AuthAPI(account: account);
-});
+class AuthAPI {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _store = FirebaseFirestore.instance;
+  CollectionReference get users => _store.collection('users');
+  final GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
 
-abstract class IAuthAPI {
-  FutureEither<model.Account> signUp({
-    required String email,
-    required String password,
-  });
-  FutureEither<model.Session> login({
-    required String email,
-    required String password,
-  });
-  Future<model.Account?> currentUserAccount();
-  FutureEitherVoid logout();
-}
-
-class AuthAPI implements IAuthAPI {
-  final Account _account;
-  AuthAPI({required Account account}) : _account = account;
-
-  @override
-  Future<model.Account?> currentUserAccount() async {
+  Future<UserCredential?> googleSignin() async {
     try {
-      final user = await _account.get();
-      print('User fetched successfully: $user');
+      final userCredential =
+          await _auth.signInWithProvider(_googleAuthProvider);
+      return userCredential;
+    } catch (e) {
+      debugPrint('$e');
+      return null;
+    }
+  }
+
+  void googleSignout() {
+    try {
+      _auth.signOut();
+      debugPrint('Signed out');
+    } catch (e) {
+      debugPrint('$e');
+    }
+  }
+
+  Future<User?> getCurrentUserInstance() async {
+    try {
+      final user = _auth.currentUser;
       return user;
-    } on AppwriteException catch (e) {
-      print('AppwriteException: ${e.message}');
-      return null;
     } catch (e) {
-      print('Generic Exception: ${e.runtimeType} | $e');
       return null;
     }
   }
 
-  @override
-  FutureEither<model.Account> signUp(
-      {required String email, required String password}) async {
-    try {
-      final account = await _account.create(
-        userId: ID.unique(),
-        email: email,
-        password: password,
-      );
-
-      return right(account);
-    } on AppwriteException catch (e, stackTrace) {
-      return left(
-        Failure(e.message ?? 'Some unexpected error occurred!', stackTrace),
-      );
-    } catch (e, stackTrace) {
-      print('Exception occurred due to: ${e.runtimeType} | $e | $stackTrace');
-      return left(Failure(e.toString(), stackTrace));
+  Future<UserModel?> readCurrentUser() async {
+    final user = _auth.currentUser;
+    final uid = user?.uid;
+    if (uid == null) {
+      debugPrint('no uid');
+      return null;
     }
-  }
-
-  @override
-  FutureEither<model.Session> login({
-    required String email,
-    required String password,
-  }) async {
     try {
-      final session =
-          await _account.createEmailSession(email: email, password: password);
-      return right(session);
-    } on AppwriteException catch (e, stackTrace) {
-      print(e);
-      return left(
-        Failure(e.message ?? 'Some unexpected error occured!', stackTrace),
-      );
-    } catch (e, stackTrace) {
-      print(e);
-      return left(
-        Failure(e.toString(), stackTrace),
-      );
-    }
-  }
-
-  @override
-  FutureEitherVoid logout() async {
-    try {
-      await _account.deleteSession(sessionId: 'current');
-      return right(null);
-    }on AppwriteException catch (e, st) {
-      return left(Failure(e.message ?? 'Some unexpected error occurred!', st));
+      final querySnapshot = await users.where('uid', isEqualTo: uid).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        final userData = UserModel.fromJson(
+            querySnapshot.docs.first.data() as Map<String, dynamic>);
+        return userData;
+      } else {
+        debugPrint('else case');
+        return null;
+      }
     } catch (e) {
-      return left(
-        Failure(e.toString(), StackTrace.current),
-      );
+      debugPrint('e $e');
+      return null;
+    }
+  }
+
+  Future createUser(UserModel user) async {
+    final docRef = users.doc();
+    try {
+      await docRef.set(user.toJson());
+    } catch (e) {
+      debugPrint('An error occurred while creating the user: $e');
+    }
+  }
+
+  Future<void> updateUser(UserModel userData) async {
+    try {
+      final user = _auth.currentUser;
+      final uid = user?.uid;
+      final querySnapshot = await users.where('uid', isEqualTo: uid).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        final docRef = querySnapshot.docs.first.reference;
+        final updateData = <String, dynamic>{};
+        if (userData.uid != null) {
+          updateData['uid'] = userData.uid;
+        }
+        if (userData.email != null) {
+          updateData['email'] = userData.email;
+        }
+        if (userData.name != null) {
+          updateData['name'] = userData.name;
+        }
+        if (updateData.isNotEmpty) {
+          await docRef.update(updateData);
+        }
+      } else {
+        debugPrint('No user found with uid: $uid');
+      }
+    } catch (e) {
+      debugPrint('An error occurred while updating the user: $e');
+    }
+  }
+
+  Future<void> addItemToCart(List<Product> cart) async {
+    try {
+      final user = _auth.currentUser;
+      final uid = user?.uid;
+      final querySnapshot = await users.where('uid', isEqualTo: uid).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        final docRef = querySnapshot.docs.first.reference;
+        await docRef.update({
+          'cart': cart.map((product) => product.toJson()).toList(),
+        });
+        debugPrint('Cart updated successfully');
+      }
+    } catch (e) {
+      debugPrint('Error updating cart: $e');
+    }
+  }
+
+  Future<List<Product>> getCart(UserModel currentUser) async {
+    try {
+      final updatedCart = List<Product>.from(currentUser.cart);
+      debugPrint('Fetching cart...');
+      return updatedCart;
+    } catch (e) {
+      debugPrint('Error updating cart: $e');
+      return [];
+    }
+  }
+
+  Future<List<Product>> removeItemFromCart(
+      List<Product> updatedCart, Product productToRemove) async {
+    try {
+      final user = _auth.currentUser;
+      final uid = user?.uid;
+      final querySnapshot = await users.where('uid', isEqualTo: uid).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        final docRef = querySnapshot.docs.first.reference;
+        updatedCart.removeWhere((item) => item.name == productToRemove.name);
+        final updatedCartMaps = updatedCart.map((e) => e.toMap()).toList();
+        await docRef.update({
+          'cart': updatedCartMaps,
+        });
+        debugPrint('Cart updated successfully');
+        return newCart;
+      } else {
+        debugPrint('User not found');
+        return updatedCart;
+      }
+    } catch (e) {
+      debugPrint('Error updating cart: $e');
+      return updatedCart;
     }
   }
 }

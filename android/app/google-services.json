@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "554691725919",
+    "project_id": "esyshopping-e667d",
+    "storage_bucket": "esyshopping-e667d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:554691725919:android:be92f18412612ff50869ea",
+        "android_client_info": {
+          "package_name": "com.kodeco.plantreco"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "554691725919-nqb19ri4fk077h7cjkabhgfljeof5kvp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kodeco.plantreco",
+            "certificate_hash": "e7c851450ba82f914160d5e5b0536b4741fa9848"
+          }
+        },
+        {
+          "client_id": "554691725919-11q6rsl628o68amgau7h24jin6p9f63f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVhdWRovivKOp6zFnJgAGbLFB4QIl_nJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "554691725919-11q6rsl628o68amgau7h24jin6p9f63f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "554691725919-5nvb68jiivq1j0m8bk6vqt0b1f5v2vmb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kodeco.plantreco"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

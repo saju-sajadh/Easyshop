@@ -1,23 +1,34 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'constants/auth_controller.dart';
-import 'screens/product_screen.dart';
-import 'screens/profile_screen.dart';
-import 'screens/settings_screen.dart';
-import 'screens/signin_screen.dart';
-import 'screens/signup_screen.dart';
-import 'screens/view.dart';
-import 'widget/bottom_navbar.dart';
-import './screens/landing_screen.dart';
-import 'widget/error_page.dart';
-import 'widget/loading_page.dart';
+import 'package:EasyShop/screens/splash_screen.dart';
+import 'package:EasyShop/styles/theme.dart';
 
-class MainApp extends ConsumerWidget {
-  const MainApp({Key? key}) : super(key: key);
+import 'screens/dashboard/dashboard_screen.dart';
+import 'screens/home/home_screen.dart';
+
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? _user;
+
+  @override
+  void initState() {
+    super.initState();
+    _auth.authStateChanges().listen((event) {
+      setState(() {
+        _user = event;
+      });
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
       [
         DeviceOrientation.portraitUp,
@@ -25,31 +36,10 @@ class MainApp extends ConsumerWidget {
       ],
     );
     return MaterialApp(
-      theme: ThemeData.light(),
-      // home: LandingScreen(),
-      home: ref.watch(currentUserAccountProvider).when(
-          data: (user) {
-            if(user != null){ 
-              return  BottomNavBar();
-            }
-            return const LandingScreen();
-          },
-          error: (error, st) {
-            print(error);
-            return ServerDownPage();
-          },
-          loading: () => const LoadingPage()),
+      theme: themeData,
+      home: _user != null ? DashboardScreen() : const SplashScreen(),
       debugShowCheckedModeBanner: false,
-      routes: {
-        '/landing': (context) => LandingScreen(),
-        '/home': (context) => BottomNavBar(),
-        '/signup': (context) => SignupScreen(),
-        '/signin': (context) => LoginScreen(),
-        '/profile': (context) => ProfileScreen(),
-        '/settings': (context) => SettingsScreen(),
-        '/viewall': (context) => ViewAllScreen(),
-        '/product': (context) => ProductDetailsScreen(),
-      },
     );
   }
 }
+
