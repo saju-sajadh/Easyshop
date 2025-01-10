@@ -1,88 +1,85 @@
 import 'package:flutter/material.dart';
-import 'package:EasyShop/models/grocery_item.dart';
-import 'package:EasyShop/screens/product_details/product_details_screen.dart';
-import 'package:EasyShop/styles/colors.dart';
+import '../../models/grocery_item.dart';
+import '../product_details/product_details_screen.dart';
+import '../../styles/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:EasyShop/widgets/grocery_item_card_widget.dart';
-import 'package:EasyShop/widgets/search_bar_widget.dart';
-
+import '../../widgets/grocery_item_card_widget.dart';
 import 'grocery_featured_item_widget.dart';
 import 'home_banner_widget.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
+        child:  Container(
           child: SingleChildScrollView(
             child: Center(
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   SvgPicture.asset('assets/icons/app_icon_color.svg'),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   padded(locationWidget()),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  padded(SearchBarWidget()),
-                  SizedBox(
+               
+                  const SizedBox(
                     height: 25,
                   ),
                   padded(HomeBanner()),
-                  SizedBox(
+                  const SizedBox(
                     height: 25,
                   ),
                   padded(subTitle('Exclusive Order')),
                   getHorizontalItemSlider(exclusiveOffers),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   padded(subTitle('Best Selling')),
                   getHorizontalItemSlider(bestSelling),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   padded(subTitle('Groceries')),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
-                  Container(
+                   Container(
                     height: 105,
                     child: ListView(
                       padding: EdgeInsets.zero,
                       scrollDirection: Axis.horizontal,
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
                         GroceryFeaturedCard(
                           groceryFeaturedItems[0],
-                          color: Color(0xffF8A44C),
+                          color: const Color(0xffF8A44C),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
                         GroceryFeaturedCard(
                           groceryFeaturedItems[1],
                           color: AppColors.primaryColor,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   getHorizontalItemSlider(groceries),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                 ],
@@ -96,17 +93,17 @@ class HomeScreen extends StatelessWidget {
 
   Widget padded(Widget widget) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 25),
+      padding: const EdgeInsets.symmetric(horizontal: 25),
       child: widget,
     );
   }
 
   Widget getHorizontalItemSlider(List<GroceryItem> items) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       height: 250,
       child: ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         itemCount: items.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
@@ -121,7 +118,7 @@ class HomeScreen extends StatelessWidget {
           );
         },
         separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(
+          return const SizedBox(
             width: 20,
           );
         },
@@ -145,12 +142,12 @@ class HomeScreen extends StatelessWidget {
       children: [
         Text(
           text,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
-        Spacer(),
-        Text(
+        const Spacer(),
+        const Text(
           'See All',
-          style: TextStyle(
+          style:  TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: AppColors.primaryColor),
@@ -160,17 +157,17 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget locationWidget() {
-    String locationIconPath = 'assets/icons/location_icon.svg';
+    const locationIconPath = 'assets/icons/location_icon.svg';
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SvgPicture.asset(
           locationIconPath,
         ),
-        SizedBox(
+        const SizedBox(
           width: 8,
         ),
-        Text(
+        const Text(
           'Easyshop',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         )

@@ -5,7 +5,7 @@ class UserModel {
   final String email;
   final String name;
   final List<Product> cart;
-  final List<Order> orders;
+  final List<OrderModel> orders;
 
   UserModel({
     required this.uid,
@@ -26,7 +26,7 @@ class UserModel {
               .toList() ??
           [],
       orders: (json['orders'] as List<dynamic>?)
-              ?.map((item) => Order.fromJson(item))
+              ?.map((item) => OrderModel.fromJson(item))
               .toList() ??
           [],
     );
@@ -49,7 +49,7 @@ class UserModel {
     String? email,
     String? name,
     List<Product>? cart,
-    List<Order>? orders,
+    List<OrderModel>? orders,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
@@ -107,21 +107,21 @@ class Product {
   }
 }
 
-class Order {
+class OrderModel {
   final String orderId;
   final List<Product> items;
   final double totalAmount;
   final DateTime orderDate;
 
-  Order({
+  OrderModel({
     required this.orderId,
     required this.items,
     required this.totalAmount,
     required this.orderDate,
   });
 
-  factory Order.fromJson(Map<String, dynamic> json) {
-    return Order(
+  factory OrderModel.fromJson(Map<String, dynamic> json) {
+    return OrderModel(
       orderId: json['orderId'] as String,
       items: (json['items'] as List<dynamic>)
           .map((item) => Product.fromJson(item))

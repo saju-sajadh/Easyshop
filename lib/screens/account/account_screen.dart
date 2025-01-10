@@ -1,10 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:EasyShop/common_widgets/app_text.dart';
-import 'package:EasyShop/helpers/column_with_seprator.dart';
-import 'package:EasyShop/styles/colors.dart';
+import '../../common_widgets/app_text.dart';
+import '../../helpers/column_with_seprator.dart';
+import '../../styles/colors.dart';
 import '../../apis/auth_api.dart';
 import '../../model_schema/user_model.dart';
 import '../auth/login_page.dart';
@@ -51,16 +50,15 @@ class AccountScreenState extends State<AccountScreen> {
               height: 20,
             ),
             ListTile(
-              leading:
-                  SizedBox(width: 65, height: 65, child: getImageHeader()),
-              title:  AppText(
+              leading: SizedBox(width: 65, height: 65, child: getImageHeader()),
+              title: AppText(
                 text: _user != null ? _user!.name : '',
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
-              subtitle:  AppText(
+              subtitle: AppText(
                 text: _user != null ? _user!.email : '',
-                color: const Color(0xff7C7C7C),
+                color: const Color.fromARGB(255, 97, 96, 96),
                 fontWeight: FontWeight.normal,
                 fontSize: 16,
               ),
@@ -68,7 +66,7 @@ class AccountScreenState extends State<AccountScreen> {
             Column(
               children: getChildrenWithSeperator(
                 widgets: accountItems.map((e) {
-                  return getAccountItemWidget(e);
+                  return getAccountItemWidget(e, context);
                 }).toList(),
                 seperator: const Divider(
                   thickness: 1,
@@ -109,7 +107,6 @@ class AccountScreenState extends State<AccountScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            
             const Text(
               'Log Out',
               textAlign: TextAlign.center,
@@ -125,55 +122,63 @@ class AccountScreenState extends State<AccountScreen> {
           final authAPI = AuthAPI();
           authAPI.googleSignout();
           Navigator.of(context).pushReplacement<void, void>(MaterialPageRoute(
-          builder: (BuildContext context) {
-            return const LoginPage();
-          },
-        ));
+            builder: (BuildContext context) {
+              return const LoginPage();
+            },
+          ));
         },
       ),
     );
   }
 
- Widget getImageHeader() {
-  if (_photoUrl == null || _photoUrl!.isEmpty) {
-    const imagePath = 'assets/images/account_image.jpg';
-    return CircleAvatar(
-      radius: 5.0,
-      backgroundImage: const AssetImage(imagePath),
-      backgroundColor: AppColors.primaryColor.withOpacity(0.7),
-    );
-  } else {
-    return CircleAvatar(
-      radius: 5.0,
-      backgroundImage: NetworkImage(_photoUrl!),
-      backgroundColor: AppColors.primaryColor.withOpacity(0.7),
-    );
+  Widget getImageHeader() {
+    if (_photoUrl == null || _photoUrl!.isEmpty) {
+      const imagePath = 'assets/images/account_image.jpg';
+      return CircleAvatar(
+        radius: 5.0,
+        backgroundImage: const AssetImage(imagePath),
+        backgroundColor: AppColors.primaryColor.withOpacity(0.7),
+      );
+    } else {
+      return CircleAvatar(
+        radius: 5.0,
+        backgroundImage: NetworkImage(_photoUrl!),
+        backgroundColor: AppColors.primaryColor.withOpacity(0.7),
+      );
+    }
   }
-}
 
-  Widget getAccountItemWidget(AccountItem accountItem) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 15),
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 20,
-            height: 20,
-            child: SvgPicture.asset(
-              accountItem.iconPath,
+  Widget getAccountItemWidget(AccountItem accountItem, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push<void>(
+          context,
+          MaterialPageRoute(builder: (context) => accountItem.screen),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 25),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: SvgPicture.asset(
+                accountItem.iconPath,
+              ),
             ),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          Text(
-            accountItem.label,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const Spacer(),
-          const Icon(Icons.arrow_forward_ios)
-        ],
+            const SizedBox(
+              width: 20,
+            ),
+            Text(
+              accountItem.label,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const Spacer(),
+            const Icon(Icons.arrow_forward_ios)
+          ],
+        ),
       ),
     );
   }

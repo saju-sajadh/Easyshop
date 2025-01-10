@@ -126,7 +126,7 @@ class AuthAPI {
     }
   }
 
-  Future<List<Product>> removeItemFromCart(
+  Future<void> removeItemFromCart(
       List<Product> updatedCart, Product productToRemove) async {
     try {
       final user = _auth.currentUser;
@@ -140,14 +140,52 @@ class AuthAPI {
           'cart': updatedCartMaps,
         });
         debugPrint('Cart updated successfully');
-        return newCart;
       } else {
         debugPrint('User not found');
-        return updatedCart;
       }
     } catch (e) {
       debugPrint('Error updating cart: $e');
-      return updatedCart;
     }
   }
+
+  Future<String> placeOrder(OrderModel orderDetails) async {
+    try {
+      final user = _auth.currentUser;
+      final uid = user?.uid;
+      if (uid == null) {
+        debugPrint('User not found');
+        return 'User not found';
+      }
+      final querySnapshot = await users.where('uid', isEqualTo: uid).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        final docRef = querySnapshot.docs.first.reference;
+        await docRef.update({
+          'orders': FieldValue.arrayUnion(
+              <Map<String, dynamic>>[orderDetails.toJson()]),
+        });
+        await docRef.update({
+          'cart': <Map<String, dynamic>>[],
+        });
+        debugPrint('Order placed successfully');
+        return 'Order placed successfully';
+      } else {
+        debugPrint('User not found');
+        return 'User not found';
+      }
+    } catch (e) {
+      debugPrint('Error placing order: $e');
+      return 'Error placing order';
+    }
+  }
+
+  Future<List<OrderModel>> getAllOrders(UserModel currentUserData) async {
+  try {
+    final orders = currentUserData.orders; 
+    debugPrint('Fetching orders...');
+    return orders; 
+  } catch (e) {
+    debugPrint('Error fetching orders: $e');
+    return <OrderModel>[];
+  }
+}
 }

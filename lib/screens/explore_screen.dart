@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:EasyShop/common_widgets/app_text.dart';
-import 'package:EasyShop/models/category_item.dart';
-import 'package:EasyShop/widgets/category_item_card_widget.dart';
-import 'package:EasyShop/widgets/search_bar_widget.dart';
+import '../common_widgets/app_text.dart';
+import '../models/category_item.dart';
+import '../widgets/category_item_card_widget.dart';
+
 
 import 'category_items_screen.dart';
 
 List<Color> gridColors = [
-  Color(0xff53B175),
-  Color(0xffF8A44C),
-  Color(0xffF7A593),
-  Color(0xffD3B0E0),
-  Color(0xffFDE598),
-  Color(0xffB7DFF5),
-  Color(0xff836AF6),
-  Color(0xffD73B77),
+  const Color(0xff53B175),
+  const Color(0xffF8A44C),
+  const Color(0xffF7A593),
+  const Color(0xffD3B0E0),
+  const Color(0xffFDE598),
+  const Color(0xffB7DFF5),
+  const Color(0xff836AF6),
+  const Color(0xffD73B77),
 ];
 
 class ExploreScreen extends StatelessWidget {
@@ -38,23 +38,19 @@ class ExploreScreen extends StatelessWidget {
 
   Widget getHeader() {
     return Column(
-      children: [
-        const SizedBox(
+      children: const [
+        SizedBox(
           height: 20,
         ),
-        const Center(
+        Center(
           child: AppText(
             text: 'Find Products',
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(
+        SizedBox(
           height: 20,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: SearchBarWidget(),
         ),
       ],
     );

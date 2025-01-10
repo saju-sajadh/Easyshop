@@ -3,6 +3,9 @@ import 'package:EasyShop/common_widgets/app_button.dart';
 import 'package:EasyShop/common_widgets/app_text.dart';
 import 'package:EasyShop/screens/order_accepted_screen.dart';
 
+import 'cart/cart_screen.dart';
+import 'home/home_screen.dart';
+
 class OrderFailedDialogue extends StatelessWidget {
   const OrderFailedDialogue({super.key});
 
@@ -75,7 +78,7 @@ class OrderFailedDialogue extends StatelessWidget {
                 Navigator.of(context)
                     .pushReplacement<void, void>(MaterialPageRoute(
                   builder: (BuildContext context) {
-                    return OrderAcceptedScreen();
+                    return const CartScreen();
                   },
                 ));
               },
@@ -86,6 +89,12 @@ class OrderFailedDialogue extends StatelessWidget {
             InkWell(
               onTap: () {
                 Navigator.pop(context);
+                Navigator.of(context)
+                    .pushReplacement<void, void>(MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return HomeScreen();
+                  },
+                ));
               },
               child: const AppText(
                 text: 'Back To Home',

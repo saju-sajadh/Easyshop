@@ -30,6 +30,12 @@ class CartScreenState extends State<CartScreen> {
     cartItems = await authAPI.getCart(currentUserData!);
     setState(() {
       isLoading = false;
+      _recalculateCartValue();
+    });
+  }
+
+  void _recalculateCartValue() {
+    setState(() {
       cartValue = 0.0;
       for (final item in cartItems!) {
         cartValue += item.price * item.quandity;
@@ -40,6 +46,7 @@ class CartScreenState extends State<CartScreen> {
   void _removeItemFromCart(Product productToRemove) {
     setState(() {
       cartItems?.removeWhere((item) => item.name == productToRemove.name);
+      _recalculateCartValue();
     });
   }
 
@@ -49,7 +56,9 @@ class CartScreenState extends State<CartScreen> {
       body: SafeArea(
         child: isLoading
             ? const Center(
-                child: CircularProgressIndicator(), // Show loading indicator
+                child: CircularProgressIndicator(
+                  color: Colors.green,
+                ),
               )
             : SingleChildScrollView(
                 child: Column(
@@ -76,6 +85,7 @@ class CartScreenState extends State<CartScreen> {
                             width: double.maxFinite,
                             child: ChartItemWidget(
                               item: e,
+                              removeCallback: _removeItemFromCart,
                             ),
                           );
                         }).toList(),
@@ -92,7 +102,21 @@ class CartScreenState extends State<CartScreen> {
                     const Divider(
                       thickness: 1,
                     ),
-                    getCheckoutButton(context),
+                    cartValue > 0
+                        ? getCheckoutButton(context)
+                        : Container(
+                            padding: const EdgeInsets.only(
+                                top: 50), // Add padding at the top
+                            child: const Text(
+                              'Cart is Empty',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 24, // Increase the font size
+                                fontWeight:
+                                    FontWeight.bold, // Optionally add boldness
+                              ),
+                            ),
+                          ),
                   ],
                 ),
               ),
@@ -129,13 +153,13 @@ class CartScreenState extends State<CartScreen> {
     );
   }
 
-  void showBottomSheet(context) {
-    showModalBottomSheet(
+  void showBottomSheet(BuildContext context) {
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext bc) {
-        return CheckoutBottomSheet();
+        return CheckoutBottomSheet(totalValue: cartValue, cartItems: cartItems);
       },
     );
   }

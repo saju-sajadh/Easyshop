@@ -1,37 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:EasyShop/common_widgets/app_button.dart';
+import '../common_widgets/app_button.dart';
+import 'account/order_details.dart';
+
 
 class OrderAcceptedScreen extends StatelessWidget {
+  const OrderAcceptedScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         width: double.maxFinite,
-        padding: EdgeInsets.symmetric(horizontal: 25),
+        padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Spacer(
+            const Spacer(
               flex: 10,
             ),
             SvgPicture.asset('assets/icons/order_accepted_icon.svg'),
-            Spacer(
+            const Spacer(
               flex: 8,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40),
               child: Text(
-                'You Order Has Been Accepted',
+                'Your Purchase Has Been Completed',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
               ),
             ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
+            const Spacer(),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40),
               child: Text(
-                '''Your item has been placed and is on its way to being processed''',
+                '''Your purchase has been placed and completed''',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 16,
@@ -39,28 +43,25 @@ class OrderAcceptedScreen extends StatelessWidget {
                     fontWeight: FontWeight.w600),
               ),
             ),
-            Spacer(
+            const Spacer(
               flex: 8,
             ),
             AppButton(
-              label: 'Track Order',
+              label: 'Back To Home',
               onPressed: () {
                 Navigator.pop(context);
+                Navigator.of(context)
+                    .pushReplacement<void, void>(MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return const OrderScreen();
+                  },
+                ));
               },
             ),
-            Spacer(
+            const Spacer(
               flex: 2,
             ),
-            InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Text(
-                'Back To Home',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Spacer(
+            const Spacer(
               flex: 10,
             ),
           ],
